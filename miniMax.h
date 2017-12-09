@@ -3,20 +3,20 @@
 
 #include "BOARD.h"
 #include "checkBoard.h"
-
+#include <stdlib.h>
 #define INF 999999999
 #define DRAW 50
 #define Depth 3
 
-void setInit(int[10][10], int);
-int miniMax(board**, int[10][10], int, int, int);
-int isArrFull(int[10][10], int);
-int isArrTerminal(int[10][10], int, int);
-void saveArray(int[10][10], int[10][10], int);
-void makeChild(int[10][10], int, int);
-void arrayToLinkedList(int[10][10], board**, int);
-void linkedListToArray(board**, int[10][10], int);
-int heuritic(int[10][10], int);
+void setInit(int**, int);
+int miniMax(board**, int**, int, int, int);
+int isArrFull(int**, int);
+int isArrTerminal(int**, int, int);
+void saveArray(int**, int**, int);
+void makeChild(int**, int, int);
+void arrayToLinkedList(int**, board**, int);
+void linkedListToArray(board**, int**, int);
+int heuritic(int**, int);
 
 
 

@@ -1,9 +1,11 @@
 #include "miniMax.h"
 
 
-int buf[10][10];
+int** buf;
 
-int heuritic(int arr[10][10], int size){
+
+
+int heuritic(int** arr, int size){
 	int user = 0, computer = 0;
 	//Check Horizontal line
 	for(int x=0;x<size;x++){
@@ -116,7 +118,7 @@ int heuritic(int arr[10][10], int size){
 
 
 
-void linkedListToArray(board** gameBoard, int buf[10][10], int size){
+void linkedListToArray(board** gameBoard, int** buf, int size){
 	for(int x=0;x<size;x++){
 		board* head = gameBoard[x];
 		for(int y=0;y<size;y++){
@@ -125,7 +127,7 @@ void linkedListToArray(board** gameBoard, int buf[10][10], int size){
 		}
 	}
 }
-void arrayToLinkedList(int buf[10][10], board** gameBoard, int size){
+void arrayToLinkedList(int** buf, board** gameBoard, int size){
 	for(int x=0;x<size;x++){
 		board* head = gameBoard[x];
 		for(int y=0;y<size;y++){
@@ -135,19 +137,19 @@ void arrayToLinkedList(int buf[10][10], board** gameBoard, int size){
 	}
 }
 
-void makeChild(int arr[10][10], int size, int who){
+void makeChild(int** arr, int size, int who){
 	for(int x=0;x<size;x++)
 		for(int y=0;y<size;y++)
 			if(arr[x][y] == 0)
 				arr[x][y] = who * 2;
 }
-void saveArray(int buf[10][10], int bbuf[10][10], int size){
+void saveArray(int** buf, int** bbuf, int size){
 	for(int i=0;i<size;i++)
 		for(int j=0;j<size;j++)
 			buf[i][j] = bbuf[i][j];
 }
 
-int isArrTerminal(int arr[10][10], int size, int who){
+int isArrTerminal(int** arr, int size, int who){
 	for(int i=0;i<size;i++){
 		int t = 1;
 		for(int j=0;j<size;j++)
@@ -173,7 +175,7 @@ int isArrTerminal(int arr[10][10], int size, int who){
 
 	return 0;
 }
-int isArrFull(int arr[10][10], int size){
+int isArrFull(int** arr, int size){
 	int full = 1;
 	for(int i=0;i<size;i++)
 		for(int j=0;j<size;j++)
@@ -182,14 +184,19 @@ int isArrFull(int arr[10][10], int size){
 	return 0;
 }
 
-int miniMax(board** gameBoard, int arr[10][10], int size, int who, int depth){
+int miniMax(board** gameBoard, int** arr, int size, int who, int depth){
+	
+
 	if(isArrTerminal(arr, size, who)) return INF;
 	if(isArrFull(arr, size)) return DRAW * who;
 	if(!depth) return heuritic(arr, size) * who;
 
 	int bestValue = INF * 2;
 
-	int bbuf[10][10];
+	int** bbuf;
+	bbuf = malloc(sizeof(int*)*10);
+	for(int i=0;i<10;i++) bbuf[i] = calloc(sizeof(int),10);
+
 	for(int i=0;i<10;i++)
 		for(int j=0;j<10;j++)
 			bbuf[i][j] = arr[i][j];
@@ -202,6 +209,10 @@ int miniMax(board** gameBoard, int arr[10][10], int size, int who, int depth){
 			int v = -miniMax(gameBoard, bbuf, size, -who, depth-1);
 			if(bestValue >= v){
 				bestValue = v;
+				if(buf == NULL) {
+					buf = malloc(sizeof(int*)*10);
+					for(int i=0;i<10;i++) buf[i] = calloc(sizeof(int),10);
+				}
 				if(Depth == depth) saveArray(buf, bbuf, size);
 			}
 			bbuf[i][j] = 0;
@@ -213,7 +224,7 @@ int miniMax(board** gameBoard, int arr[10][10], int size, int who, int depth){
 	return bestValue+100*who;
 }
 
-void setInit(int arr[10][10], int size){
+void setInit(int** arr, int size){
 	if(arr[0][0] == 1) arr[size/2][size/2] = -1;
 	else if(arr[size/2][size/2] == 1) arr[0][0] = -1;
 	else if(arr[size-1][0] == 1) arr[size/2][size/2] = -1;

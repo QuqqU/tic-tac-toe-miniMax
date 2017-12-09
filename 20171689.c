@@ -6,9 +6,13 @@
 #include "miniMax.h"
 
 int who = 1;
-int buf[10][10];
+int** buf;
 
 int main(){
+
+	buf = malloc(sizeof(int*)*10);
+	for(int i=0;i<10;i++) buf[i] = calloc(sizeof(int),10);
+
 	printf("What size? "); int size; scanf("%d", &size);	
 	board** gameBoard = (board**)calloc(sizeof(board*), size); 
 	makeBoard(gameBoard, size);
